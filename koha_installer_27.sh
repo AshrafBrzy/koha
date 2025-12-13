@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # =================================================================
-# Koha Platinum Installer - v33.3 (GitHub Database Integration)
-# الميزات: استيراد قاعدة بيانات من GitHub + ترقية المخطط + حماية
+# Koha Platinum Installer - v34.0 (Merged Apache Fixes)
+# الميزات: استيراد قاعدة بيانات + قالب أباتشي نظيف + إصلاح SSL
 # =================================================================
 
 # --- System Constants ---
@@ -11,8 +11,7 @@ CONFIG_FILE="koha_installer.conf"
 ICU_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/words-icu.xml"
 IDX_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/default.idx"
 
-# ضع رابط قاعدة البيانات هنا إذا أردت تثبيته تلقائياً (GitHub Raw Link)
-# مثال: "https://raw.githubusercontent.com/user/repo/main/dump.sql.gz"
+# رابط قاعدة البيانات الافتراضي
 DEFAULT_DB_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_frish_245_2024.07.30-10.46.25.sql.gz" 
 
 TOTAL_STEPS=12
@@ -31,7 +30,7 @@ PURPLE='\033[0;35m'
 setup_config() {
     clear
     echo -e "${GREEN}===============================================${NC}"
-    echo -e "${GREEN}   Koha Platinum Installer v33.3 (DB Sync)     ${NC}"
+    echo -e "${GREEN}    Koha Platinum Installer v34.0 (Fixed)      ${NC}"
     echo -e "${GREEN}===============================================${NC}"
     
     echo -e "${YELLOW}ATTENTION: Ensure DNS 'A' records are set!${NC}"
@@ -52,7 +51,6 @@ setup_config() {
         USE_EXISTING=${USE_EXISTING:-y}
         
         if [[ "$USE_EXISTING" =~ ^[Yy]$ ]]; then
-            # If DB_URL was empty in file but we have DEFAULT, use DEFAULT
             if [ -z "$DB_URL" ] && [ ! -z "$DEFAULT_DB_URL" ]; then DB_URL="$DEFAULT_DB_URL"; fi
             export INSTANCE DOMAIN OPAC_DOMAIN STAFF_DOMAIN EMAIL DB_URL
             return
@@ -65,7 +63,7 @@ setup_config() {
     read -p "Library Name (short) [library]: " INPUT_INSTANCE
     INSTANCE=${INPUT_INSTANCE:-library}
     
-    read -p "Main Domain: " INPUT_DOMAIN
+    read -p "Main Domain (e.g. adrle.com): " INPUT_DOMAIN
     DOMAIN=${INPUT_DOMAIN}
     
     DEFAULT_OPAC="lib.$DOMAIN"
@@ -359,7 +357,6 @@ step_10_config_lang() {
         chown "$INSTANCE-koha:$INSTANCE-koha" "$CSS_RTL"
     fi
 
-    # Logic: Only Reindex if DB was imported in this run
     if [ "$DB_IMPORTED" = true ]; then
         echo "Database restored, running full reindex..."
         koha-rebuild-zebra -v -f "$INSTANCE"
@@ -369,63 +366,157 @@ step_10_config_lang() {
     koha-plack --restart "$INSTANCE" || koha-plack --start "$INSTANCE"
 }
 
-step_11_apache_ssl() {
-    echo ">> Finalizing Apache Config..."
-    
-    FINAL_APACHE_OPTS='
-       RewriteEngine On
-       RewriteRule ^/opac-tmpl/(.*)_[0-9]+\.(css|js)$ /opac-tmpl/$1.$2 [L]
-       RewriteRule ^/intranet-tmpl/(.*)_[0-9]+\.(css|js)$ /intranet-tmpl/$1.$2 [L]
-       <IfModule security2_module>
-          <LocationMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map|json)(\?.*)?$">
-             SecRuleEngine Off
-          </LocationMatch>
-          <LocationMatch "^/\.well-known/acme-challenge/">
-             SecRuleEngine Off
-             SecAuditEngine Off
-          </LocationMatch>
-       </IfModule>
-       RewriteCond %{HTTP_USER_AGENT} (BLEXBot|PetalBot|Amazonbot|AliyunSecBot|bingbot|GPTBot|SemrushBot|AhrefsBot) [NC]
-       RewriteRule ^ - [F,L]
-    '
+# --- MERGED FIXES: REPLACING STEPS 11 & 12 ---
 
+step_11_get_ssl_certs() {
+    echo ">> Requesting SSL Certs (Certonly)..."
+    source "$CONFIG_FILE"
+    
+    # Calculate extra aliases (admin.domain.com, ngladmin.domain.com)
+    ADMIN_ALIAS="admin.${DOMAIN}"
+    NGL_ADMIN_ALIAS="${INSTANCE}admin.${DOMAIN}"
+
+    echo "Requesting certs for: $OPAC_DOMAIN, $STAFF_DOMAIN, $ADMIN_ALIAS, $NGL_ADMIN_ALIAS"
+
+    # Ensure Apache is running for --apache plugin, or stop it if using --standalone?
+    # --apache plugin handles temporary config changes.
+    
+    if [[ ! "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]; then
+        certbot certonly --apache -d "$OPAC_DOMAIN" -d "$STAFF_DOMAIN" -d "$ADMIN_ALIAS" -d "$NGL_ADMIN_ALIAS" \
+          --register-unsafely-without-email --agree-tos --non-interactive --expand
+    else
+        certbot certonly --apache -d "$OPAC_DOMAIN" -d "$STAFF_DOMAIN" -d "$ADMIN_ALIAS" -d "$NGL_ADMIN_ALIAS" \
+          --non-interactive --agree-tos -m "$EMAIL" --expand
+    fi
+}
+
+step_12_write_final_apache() {
+    echo ">> Writing Clean Apache Config..."
+    source "$CONFIG_FILE"
+
+    # Paths for SSL - based on the first domain passed to Certbot (usually OPAC_DOMAIN)
+    CERT_FILE="/etc/letsencrypt/live/$OPAC_DOMAIN/fullchain.pem"
+    KEY_FILE="/etc/letsencrypt/live/$OPAC_DOMAIN/privkey.pem"
+    
+    # Extra Aliases
+    ADMIN_ALIAS="admin.${DOMAIN}"
+    NGL_ADMIN_ALIAS="${INSTANCE}admin.${DOMAIN}"
+    
+    # Remove old/auto-generated files
+    rm -f "/etc/apache2/sites-available/$INSTANCE-le-ssl.conf"
+
+    # Write the CLEAN template
     cat <<EOF > /etc/apache2/sites-available/$INSTANCE.conf
+# --- HTTP Redirect Block (Force HTTPS) ---
 <VirtualHost *:80>
-   ServerName $OPAC_DOMAIN
-   $FINAL_APACHE_OPTS
-   Include /etc/koha/apache-shared.conf
-   Include /etc/koha/apache-shared-opac-plack.conf
-   SetEnv KOHA_CONF "/etc/koha/sites/$INSTANCE/koha-conf.xml"
-   AssignUserID $INSTANCE-koha $INSTANCE-koha
-   ErrorLog /var/log/koha/$INSTANCE/opac-error.log
+    ServerName $OPAC_DOMAIN
+    ServerAlias $STAFF_DOMAIN $ADMIN_ALIAS $NGL_ADMIN_ALIAS
+    DocumentRoot /var/www/html
+    
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </VirtualHost>
-<VirtualHost *:80>
-   ServerName $STAFF_DOMAIN
-   $FINAL_APACHE_OPTS
-   Include /etc/koha/apache-shared.conf
-   Include /etc/koha/apache-shared-intranet-plack.conf
-   SetEnv KOHA_CONF "/etc/koha/sites/$INSTANCE/koha-conf.xml"
-   AssignUserID $INSTANCE-koha $INSTANCE-koha
-   ErrorLog /var/log/koha/$INSTANCE/intranet-error.log
+
+<IfModule mod_ssl.c>
+# --- OPAC VirtualHost ---
+<VirtualHost *:443>
+  <IfVersion >= 2.4>
+   Define instance "$INSTANCE"
+  </IfVersion>
+
+  ServerName $OPAC_DOMAIN
+  
+  Include /etc/koha/apache-shared.conf
+  Include /etc/koha/apache-shared-opac-plack.conf
+  Include /etc/koha/apache-shared-opac.conf
+  
+  SetEnv KOHA_CONF "/etc/koha/sites/$INSTANCE/koha-conf.xml"
+  AssignUserID $INSTANCE-koha $INSTANCE-koha
+  
+  ErrorLog /var/log/koha/$INSTANCE/opac-error.log
+  
+  # Security & Bots
+  RewriteEngine on
+  RewriteCond %{HTTP_USER_AGENT} (BLEXBot|PetalBot|Amazonbot|AliyunSecBot|bingbot|GPTBot|SemrushBot|AhrefsBot|OAI-SearchBot|Googlebot) [NC]
+  RewriteRule ^ - [F,L]
+
+  Include /etc/letsencrypt/options-ssl-apache.conf
+
+  # ModSecurity
+  <IfModule security2_module>
+      SecRuleEngine On
+      SecRequestBodyAccess On
+      SecResponseBodyAccess Off
+      SecAuditEngine RelevantOnly
+      SecAuditLog /var/log/apache2/modsec_audit.log
+      SecAuditLogParts ABIFHZ
+      IncludeOptional /usr/share/modsecurity-crs/crs-setup.conf
+      IncludeOptional /usr/share/modsecurity-crs/rules/*.conf
+  </IfModule>
+  
+  ErrorDocument 403 /403.html
+  ErrorDocument 500 /500.html
+
+  SSLCertificateFile $CERT_FILE
+  SSLCertificateKeyFile $KEY_FILE
 </VirtualHost>
+
+# --- Staff VirtualHost ---
+<VirtualHost *:443>
+  <IfVersion >= 2.4>
+   Define instance "$INSTANCE"
+  </IfVersion>
+
+  ServerName $STAFF_DOMAIN
+  # Added Aliases from Fix Script
+  ServerAlias $ADMIN_ALIAS $NGL_ADMIN_ALIAS
+
+  Include /etc/koha/apache-shared.conf
+  Include /etc/koha/apache-shared-intranet-plack.conf
+  Include /etc/koha/apache-shared-intranet.conf
+  
+  SetEnv KOHA_CONF "/etc/koha/sites/$INSTANCE/koha-conf.xml"
+  AssignUserID $INSTANCE-koha $INSTANCE-koha
+  
+  Alias /plugin/ "/var/lib/koha/$INSTANCE/plugins/"
+  <Directory /var/lib/koha/$INSTANCE/plugins/>
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+  </Directory>
+
+  ErrorLog /var/log/koha/$INSTANCE/intranet-error.log
+
+  RewriteEngine on
+  Include /etc/letsencrypt/options-ssl-apache.conf
+
+  <IfModule security2_module>
+      SecRuleEngine On
+      SecRequestBodyAccess On
+      SecResponseBodyAccess Off
+      SecAuditEngine RelevantOnly
+      SecAuditLog /var/log/apache2/modsec_audit.log
+      SecAuditLogParts ABIFHZ
+      IncludeOptional /usr/share/modsecurity-crs/crs-setup.conf
+      IncludeOptional /usr/share/modsecurity-crs/rules/*.conf
+  </IfModule>
+
+  SSLCertificateFile $CERT_FILE
+  SSLCertificateKeyFile $KEY_FILE
+</VirtualHost>
+</IfModule>
 EOF
 
+    # Final Permission Check & Enable
     chown -R "$INSTANCE-koha:$INSTANCE-koha" "/var/lib/koha/$INSTANCE"
     chmod -R g+rX "/var/lib/koha/$INSTANCE"
     usermod -a -G "${INSTANCE}-koha" www-data
 
+    a2enmod ssl rewrite headers proxy_http
     a2dissite 000-default || true
     a2ensite "$INSTANCE"
     systemctl restart apache2
-}
-
-step_12_certbot() {
-    echo ">> Requesting SSL..."
-    if [[ ! "$EMAIL" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]; then
-        certbot --apache -d "$OPAC_DOMAIN" -d "$STAFF_DOMAIN" --register-unsafely-without-email --agree-tos --redirect --non-interactive
-    else
-        certbot --apache -d "$OPAC_DOMAIN" -d "$STAFF_DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
-    fi
 }
 
 # --- Start ---
@@ -452,8 +543,9 @@ run_step "Creating Instance" step_7_create
 run_step "Importing Database" step_8_import_db
 run_step "Optimizing Search" step_9_arabic_search
 run_step "Configuring Koha" step_10_config_lang
-run_step "Finalizing Web Server" step_11_apache_ssl
-run_step "Enabling SSL" step_12_certbot
+# Updated Steps
+run_step "Requesting SSL (Certonly)" step_11_get_ssl_certs
+run_step "Writing Final Apache Config" step_12_write_final_apache
 
 # --- Finish ---
 SCRIPT_END_TIME=$(date +%s)
@@ -476,6 +568,7 @@ fi
 
 echo -e " >> OPAC URL:  https://$OPAC_DOMAIN"
 echo -e " >> Staff URL: https://$STAFF_DOMAIN"
+echo -e " >> Alt Staff: https://${INSTANCE}admin.${DOMAIN}"
 echo -e " >> DB User:   $ADMIN_USER"
 echo -e " >> DB Pass:   $ADMIN_PASS"
 echo -e "-------------------------------------------"
