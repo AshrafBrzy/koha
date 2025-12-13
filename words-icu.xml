@@ -19,11 +19,100 @@
   <transliterate rule="[أإآٱ] > ا"/>
   
   <!-- توحيد الياء المتطرفة فقط (في آخر الكلمة) -->
-  <!-- الرمز $ يعني نهاية الكلمة -->
   <transliterate rule="ى$ > ي"/>
   
   <!-- توحيد التاء المربوطة في آخر الكلمة -->
   <transliterate rule="ة$ > ه"/>
+
+  <!-- ================================================== -->
+  <!-- 4.5 قائمة الاستثناءات (حماية الـ الأصلية) - موسعة -->
+  <!-- نقوم بإضافة رمز _ لحماية الكلمة من الحذف اللاحق -->
+  <!-- ================================================== -->
+  
+  <!-- أسماء الله الحسنى وكلمات دينية -->
+  <transliterate rule="^الله > _الله"/>
+  <transliterate rule="^بالله > _بالله"/>
+  <transliterate rule="^والله > _والله"/>
+  <transliterate rule="^تالله > _تالله"/>
+  <transliterate rule="^لله > _لله"/>
+  <transliterate rule="^اله > _اله"/> <!-- إله -->
+  <transliterate rule="^الهة > _الهة"/> <!-- آلهة -->
+
+  <!-- أسماء علم وأشخاص (إلياس، أليس، إلخ) -->
+  <transliterate rule="^الياس > _الياس"/>
+  <transliterate rule="^الياسين > _الياسين"/>
+  <transliterate rule="^اليس > _اليس"/>
+  <transliterate rule="^اليسا > _اليسا"/>
+  <transliterate rule="^اليكس > _اليكس"/>
+  <transliterate rule="^الكسندر > _الكسندر"/>
+  <transliterate rule="^الما > _الما"/>
+  <transliterate rule="^الفت > _الفت"/> <!-- ألفت -->
+  <transliterate rule="^اليف > _اليف"/> <!-- أليف -->
+
+  <!-- أسماء دول وأماكن -->
+  <transliterate rule="^المانيا > _المانيا"/>
+  <transliterate rule="^البانيا > _البانيا"/>
+  <transliterate rule="^الاسكا > _الاسكا"/>
+  <transliterate rule="^الاباما > _الاباما"/>
+  <transliterate rule="^الزاس > _الزاس"/>
+  <transliterate rule="^الماظة > _الماظة"/>
+
+  <!-- كلمات شائعة ومصطلحات -->
+  <transliterate rule="^الوان > _الوان"/>
+  <transliterate rule="^العاب > _العاب"/>
+  <transliterate rule="^الماس > _الماس"/>
+  <transliterate rule="^البان > _البان"/>
+  <transliterate rule="^الحان > _الحان"/>
+  <transliterate rule="^اليم > _اليم"/>
+  <transliterate rule="^الفاظ > _الفاظ"/>
+  <transliterate rule="^السون > _السون"/>
+  <transliterate rule="^المنيوم > _المنيوم"/>
+  <transliterate rule="^الكترون > _الكترون"/>
+  <transliterate rule="^الكترونيات > _الكترونيات"/>
+  <transliterate rule="^الكتروني > _الكتروني"/>
+  <transliterate rule="^الياف > _الياف"/> <!-- ألياف -->
+  <transliterate rule="^البوم > _البوم"/> <!-- ألبوم -->
+  <transliterate rule="^البومات > _البومات"/>
+  <transliterate rule="^الف > _الف"/> <!-- ألف -->
+  <transliterate rule="^الفين > _الفين"/>
+  <transliterate rule="^الفية > _الفية"/>
+  <transliterate rule="^الوف > _الوف"/>
+
+  <!-- مصادر وأفعال تبدأ بهمزة (إلهام، إلغاء، ألم) -->
+  <transliterate rule="^الم > _الم"/> <!-- ألم -->
+  <transliterate rule="^الام > _الام"/> <!-- آلام -->
+  <transliterate rule="^الهام > _الهام"/> <!-- إلهام -->
+  <transliterate rule="^الحاد > _الحاد"/> <!-- إلحاد -->
+  <transliterate rule="^الزام > _الزام"/> <!-- إلزام -->
+  <transliterate rule="^الغاء > _الغاء"/> <!-- إلغاء -->
+  <transliterate rule="^القاء > _القاء"/> <!-- إلقاء -->
+  <transliterate rule="^الحاق > _الحاق"/> <!-- إلحاق -->
+  <transliterate rule="^المان > _المان"/> <!-- إلمام -->
+  <transliterate rule="^الفة > _الفة"/> <!-- ألفة -->
+  <transliterate rule="^الية > _الية"/> <!-- آلية -->
+  <transliterate rule="^الي > _الي"/> <!-- آلي -->
+  <transliterate rule="^الق > _الق"/> <!-- ألق -->
+
+  <!-- أدوات وضمائر وظروف (لا يجب حذف ال منها) -->
+  <transliterate rule="^الذي > _الذي"/>
+  <transliterate rule="^التي > _التي"/>
+  <transliterate rule="^الذين > _الذين"/>
+  <transliterate rule="^اللاتي > _اللاتي"/>
+  <transliterate rule="^اللواتي > _اللواتي"/>
+  <transliterate rule="^اللائي > _اللائي"/>
+  <transliterate rule="^الان > _الان"/> <!-- الآن -->
+  <transliterate rule="^الا > _الا"/> <!-- إلا -->
+  <transliterate rule="^الي > _الي"/> <!-- إلي -->
+  <transliterate rule="^الى > _الى"/> <!-- إلى -->
+  <transliterate rule="^الو > _الو"/> <!-- ألو -->
+
+  <!-- كلمات أجنبية معربة شائعة -->
+  <transliterate rule="^الترا > _الترا"/> <!-- Ultra -->
+  <transliterate rule="^التيما > _التيما"/>
+  <transliterate rule="^الفا > _الفا"/> <!-- Alpha -->
+  <transliterate rule="^الما > _الما"/> <!-- Alma -->
+
+  <!-- ================================================== -->
 
   <!-- 5. إزالة "ال" التعريف ومشتقاتها (لكل الحروف الهجائية) -->
   
@@ -206,6 +295,84 @@
   <transliterate rule="^لله > ه"/>
   <transliterate rule="^للو > و"/>
   <transliterate rule="^للي > ي"/>
+
+  <!-- ================================================== -->
+  <!-- 6. المترادفات (Synonyms) - توحيد المصطلحات -->
+  <!-- يتم وضعها هنا بعد إزالة الـ التعريف لضمان شمولية البحث -->
+  <!-- ================================================== -->
+  
+  <!-- أجهزة وتقنية (توحيد المصطلحات التقنية) -->
+  <transliterate rule="^جوال > محمول"/>
+  <transliterate rule="^موبايل > محمول"/>
+  <transliterate rule="^خلوي > محمول"/>
+  <transliterate rule="^تليفون > هاتف"/> <!-- يمكن توحيدها على هاتف أو محمول حسب الرغبة -->
+  <transliterate rule="^حاسب > كمبيوتر"/>
+  <transliterate rule="^حاسوب > كمبيوتر"/>
+  <transliterate rule="^لابتوب > كمبيوتر"/>
+  <transliterate rule="^لاب > كمبيوتر"/>
+  <transliterate rule="^ديسكتوب > كمبيوتر"/>
+  <transliterate rule="^بي سي > كمبيوتر"/>
+  <transliterate rule="^تابلت > لوحي"/>
+  <transliterate rule="^ايباد > لوحي"/>
+  <transliterate rule="^سيرفر > خادم"/>
+  <transliterate rule="^داتابيز > قاعدة بيانات"/>
+  <transliterate rule="^انترنت > شبكة"/>
+  <transliterate rule="^نت > شبكة"/>
+  <transliterate rule="^واي فاي > لاسلكي"/>
+  <transliterate rule="^ابليكيشن > تطبيق"/>
+  <transliterate rule="^سوفتوير > برمجيات"/>
+  <transliterate rule="^هاردوير > عتاد"/>
+  <transliterate rule="^برينتر > طابعة"/>
+  <transliterate rule="^سكانر > ماسح ضوئي"/>
+  <transliterate rule="^ماوس > فارة"/>
+  <transliterate rule="^كيبورد > لوحة مفاتيح"/>
+  <transliterate rule="^هارد > قرص صلب"/>
+  <transliterate rule="^فلاشة > ذاكرة وميضة"/>
+  <transliterate rule="^يو اس بي > ذاكرة وميضة"/>
+  <transliterate rule="^سكرين > شاشة"/>
+  <transliterate rule="^مونيتور > شاشة"/>
+  <transliterate rule="^بروجيكتور > عارض"/>
+
+  <!-- أوعية المعلومات والمكتبات -->
+  <transliterate rule="^سي دي > قرص"/>
+  <transliterate rule="^دي في دي > قرص"/>
+  <transliterate rule="^قرص مدمج > قرص"/>
+  <transliterate rule="^جورنال > دورية"/>
+  <transliterate rule="^مجلة > دورية"/> <!-- خيار: يمكن فصلها إذا أردت -->
+  <transliterate rule="^قاموس > معجم"/>
+  <transliterate rule="^خريطة > اطلس"/> <!-- لتوحيد البحث الجغرافي -->
+  <transliterate rule="^خرائط > اطلس"/>
+  <transliterate rule="^موسوعة > دائرة معارف"/>
+  <transliterate rule="^اطروحة > رسالة جامعية"/>
+  <transliterate rule="^ثيسس > رسالة جامعية"/>
+  <transliterate rule="^كاسيت > تسجيل صوتي"/>
+  <transliterate rule="^فيديو > تسجيل مرئي"/>
+  <transliterate rule="^بي دي اف > ملف الكتروني"/>
+  <transliterate rule="^اي بوك > كتاب الكتروني"/>
+  <transliterate rule="^ببليوغرافيا > قائمة مراجع"/>
+
+  <!-- مصطلحات عامة -->
+  <transliterate rule="^عربة > سيارة"/>
+  <transliterate rule="^مركبة > سيارة"/>
+  <transliterate rule="^اوتومبيل > سيارة"/>
+  <transliterate rule="^اوتوبيس > حافلة"/>
+  <transliterate rule="^باص > حافلة"/>
+  <transliterate rule="^تاكسي > اجرة"/>
+  <transliterate rule="^سيكل > دراجة"/>
+  <transliterate rule="^بسكليت > دراجة"/>
+  <transliterate rule="^موتوسيكل > دراجة نارية"/>
+  <transliterate rule="^تلميذ > طالب"/>
+  <transliterate rule="^تلفزيون > تلفاز"/>
+  <transliterate rule="^راديو > مذياع"/>
+
+  <!-- دول وأماكن (توحيد الأسماء الشائعة) -->
+  <transliterate rule="^انجلترا > المملكة المتحدة"/>
+  <transliterate rule="^بريطانيا > المملكة المتحدة"/>
+  <transliterate rule="^امريكا > الولايات المتحدة"/>
+  <transliterate rule="^بي بي سي > هيئة الاذاعة البريطانية"/>
+
+  <!-- 8. استعادة الكلمات المحمية (إزالة رمز الحماية _) -->
+  <transliterate rule="^_ > "/>
 
   <display/>
   <casemap rule="l"/>
