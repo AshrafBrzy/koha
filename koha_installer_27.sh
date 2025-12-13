@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # =================================================================
-# Koha Platinum Installer - v33.2 (Reordered Logic: Install First, Tune Later)
-# الترتيب الجديد: التثبيت الأساسي > تحليل العتاد > الأداء > الحماية > SSL
+# Koha Platinum Installer - v33.3 (GitHub Database Integration)
+# الميزات: استيراد قاعدة بيانات من GitHub + ترقية المخطط + حماية
 # =================================================================
 
 # --- System Constants ---
@@ -10,6 +10,11 @@ LOG_FILE="/var/log/koha_install.log"
 CONFIG_FILE="koha_installer.conf"
 ICU_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/words-icu.xml"
 IDX_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/default.idx"
+
+# ضع رابط قاعدة البيانات هنا إذا أردت تثبيته تلقائياً (GitHub Raw Link)
+# مثال: "https://raw.githubusercontent.com/user/repo/main/dump.sql.gz"
+DEFAULT_DB_URL="https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_frish_245_2024.07.30-10.46.25.sql.gz" 
+
 TOTAL_STEPS=12
 CURRENT_STEP=0
 
@@ -26,7 +31,7 @@ PURPLE='\033[0;35m'
 setup_config() {
     clear
     echo -e "${GREEN}===============================================${NC}"
-    echo -e "${GREEN}   Koha Platinum Installer v33.2 (Reordered)   ${NC}"
+    echo -e "${GREEN}   Koha Platinum Installer v33.3 (DB Sync)     ${NC}"
     echo -e "${GREEN}===============================================${NC}"
     
     echo -e "${YELLOW}ATTENTION: Ensure DNS 'A' records are set!${NC}"
@@ -40,13 +45,15 @@ setup_config() {
         echo -e "   3. OPAC Domain:   ${GREEN}$OPAC_DOMAIN${NC}"
         echo -e "   4. Staff Domain:  ${GREEN}$STAFF_DOMAIN${NC}"
         echo -e "   5. Email:         ${GREEN}$EMAIL${NC}"
-        echo -e "   6. DB URL:        ${GREEN}${DB_URL:-(New Install)}${NC}"
+        echo -e "   6. DB URL:        ${GREEN}${DB_URL:-$DEFAULT_DB_URL}${NC}"
         echo -e "${YELLOW}--------------------------------------------------${NC}"
         
         read -p "Use these settings? (y/n) [y]: " USE_EXISTING
         USE_EXISTING=${USE_EXISTING:-y}
         
         if [[ "$USE_EXISTING" =~ ^[Yy]$ ]]; then
+            # If DB_URL was empty in file but we have DEFAULT, use DEFAULT
+            if [ -z "$DB_URL" ] && [ ! -z "$DEFAULT_DB_URL" ]; then DB_URL="$DEFAULT_DB_URL"; fi
             export INSTANCE DOMAIN OPAC_DOMAIN STAFF_DOMAIN EMAIL DB_URL
             return
         fi
@@ -72,10 +79,24 @@ setup_config() {
     read -p "Admin Email: " INPUT_EMAIL
     EMAIL=${INPUT_EMAIL}
     
-    echo -e "\n${YELLOW}>>> Database Restoration (Optional)${NC}"
-    echo "If you have a backup (e.g., .sql.gz), paste the direct link here."
-    read -p "DB Backup URL (Leave empty for fresh install): " INPUT_DB_URL
-    DB_URL=${INPUT_DB_URL}
+    echo -e "\n${YELLOW}>>> Database Import (GitHub/Direct Link)${NC}"
+    if [ ! -z "$DEFAULT_DB_URL" ]; then
+        echo -e "Default URL found: ${CYAN}$DEFAULT_DB_URL${NC}"
+        read -p "Use this URL? (y/n/custom) [y]: " USE_DEFAULT_DB
+        if [[ "$USE_DEFAULT_DB" =~ ^[Nn]$ ]]; then
+            DB_URL=""
+        elif [[ "$USE_DEFAULT_DB" =~ ^[Yy]$ ]] || [ -z "$USE_DEFAULT_DB" ]; then
+            DB_URL="$DEFAULT_DB_URL"
+        else
+            DB_URL="$USE_DEFAULT_DB"
+        fi
+    fi
+    
+    if [ -z "$DB_URL" ]; then
+        echo "Paste your .sql.gz URL (e.g. from GitHub Raw)."
+        read -p "DB URL (Leave empty for fresh install): " INPUT_DB_URL
+        DB_URL=${INPUT_DB_URL}
+    fi
 
     if [[ -z "$INSTANCE" || -z "$DOMAIN" || -z "$OPAC_DOMAIN" || -z "$STAFF_DOMAIN" || -z "$EMAIL" ]]; then
         echo -e "${RED}Error: Basic fields are required!${NC}"
@@ -155,7 +176,7 @@ run_step() {
 # --- Step Implementation ---
 
 step_1_resources() {
-    echo " Analyzing Hardware..."
+    echo ">> Analyzing Hardware..."
     CPU_CORES=$(nproc)
     TOTAL_RAM_MB=$(free -m | awk '/^Mem:/{print $2}')
     DB_RAM_MB=$((TOTAL_RAM_MB * 45 / 100))
@@ -195,7 +216,7 @@ step_4_install() {
 }
 
 step_5_tuning() {
-    echo ">> Configuring Performance (Applying Hardware Analysis)..."
+    echo ">> Configuring Performance..."
     source "$CONFIG_FILE"
     cat <<EOF > /etc/mysql/mariadb.conf.d/99-koha-perf.cnf
 [mysqld]
@@ -217,8 +238,6 @@ EOF
     MaxConnectionsPerChild   0
 </IfModule>
 EOF
-    # Restart services to apply tuning immediately
-    systemctl restart mariadb apache2
 }
 
 step_6_security() {
@@ -259,39 +278,38 @@ step_7_create() {
 }
 
 step_8_import_db() {
-    echo ">> Database Seeding & Upgrade..."
+    echo ">> Database Restoration..."
     source "$CONFIG_FILE"
     
     if [ ! -z "$DB_URL" ]; then
-        echo "Downloading SQL Dump..."
+        echo "Downloading SQL Dump from GitHub..."
         FILENAME=$(basename "$DB_URL")
         TEMP_FILE="/tmp/$FILENAME"
         
-        # Download
-        if wget -O "$TEMP_FILE" "$DB_URL"; then
+        # Use no-check-certificate to handle raw.githubusercontent issues on fresh systems
+        if wget --no-check-certificate -O "$TEMP_FILE" "$DB_URL"; then
             echo "Processing DB File..."
             
-            # Decompress if needed
             if [[ "$TEMP_FILE" == *.gz ]]; then
-                echo "Decompressing GZIP..."
+                echo "Decompressing..."
                 gunzip -f "$TEMP_FILE"
                 TEMP_FILE="${TEMP_FILE%.gz}"
             fi
             
-            echo "Restoring Database to $INSTANCE..."
+            echo "Restoring to $INSTANCE..."
             koha-mysql "$INSTANCE" < "$TEMP_FILE"
             
-            echo "Upgrading Database Schema..."
+            echo "Upgrading Schema..."
             koha-upgrade-schema "$INSTANCE"
             
-            echo "Updating System Preferences..."
+            echo "Updating Base URLs..."
             koha-mysql "$INSTANCE" -e "UPDATE systempreferences SET value='https://$STAFF_DOMAIN' WHERE variable='staffClientBaseURL';"
             koha-mysql "$INSTANCE" -e "UPDATE systempreferences SET value='https://$OPAC_DOMAIN' WHERE variable='OPACBaseURL';"
             
             export DB_IMPORTED=true
             echo "DB_IMPORTED=true" >> "$CONFIG_FILE"
         else
-            echo "Failed to download DB. Skipping."
+            echo "Download failed. Skipping."
         fi
     else
         echo "No DB URL provided. Fresh install mode."
@@ -423,17 +441,17 @@ echo "--- Installation Started: $(date) ---" > "$LOG_FILE"
 echo -e "${YELLOW}Logs are saved to: $LOG_FILE${NC}"
 echo -e "${CYAN}Starting Installation...${NC}"
 
-# Run Steps (REORDERED)
+# Run Steps
+run_step "Analyzing Resources" step_1_resources
 run_step "Configuring Locale" step_2_locale
 run_step "Preparing Repos" step_3_repos
 run_step "Installing Packages" step_4_install
+run_step "Applying Performance" step_5_tuning
+run_step "Configuring Security" step_6_security
 run_step "Creating Instance" step_7_create
 run_step "Importing Database" step_8_import_db
-run_step "Analyzing Hardware" step_1_resources
-run_step "Applying Performance Tuning" step_5_tuning
 run_step "Optimizing Search" step_9_arabic_search
-run_step "Configuring Security" step_6_security
-run_step "Configuring Koha & Lang" step_10_config_lang
+run_step "Configuring Koha" step_10_config_lang
 run_step "Finalizing Web Server" step_11_apache_ssl
 run_step "Enabling SSL" step_12_certbot
 
