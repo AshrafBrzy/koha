@@ -69,22 +69,12 @@ Installation Steps
 wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
 
 
-2. Edit configuration (Domain & Email):
-
-nano koha_installer_27.sh
-
-
-3. Make executable:
-
-chmod +x koha_installer_27.sh
-
-
-4. Run installer:
+2. Run installer:
 
 sudo bash koha_installer_27.sh
 
 
-5. Finalize:
+3. Finalize:
 
 Follow the on-screen prompts. The system will be ready in minutes.
 
@@ -171,17 +161,12 @@ License: Creative Commons (CC BY-SA 4.0)
 wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
 
 
-2. تعديل البيانات (الدومين والإيميل):
-
-nano koha_installer_27.sh
-
-
-3. تشغيل المثبت مباشرة:
+2. تشغيل المثبت مباشرة:
 
 sudo bash koha_installer_27.sh
 
 
-4. الانتهاء:
+3. الانتهاء:
 
 انتظر بضع دقائق حتى تظهر لك بيانات الدخول النهائية.
 
