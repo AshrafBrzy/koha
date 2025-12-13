@@ -54,22 +54,22 @@ Installation Steps
 
 1. Download the script:
 
-wget [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_fixed.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_fixed.sh)
+wget [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
 
 
 2. Edit configuration (Domain & Email):
 
-nano koha_installer_fixed.sh
+nano koha_installer_27.sh
 
 
 3. Make executable:
 
-chmod +x koha_installer_fixed.sh
+chmod +x koha_installer_27.sh
 
 
 4. Run installer:
 
-sudo ./koha_installer_fixed.sh
+sudo ./koha_installer_27.sh
 
 
 5. Finalize:
@@ -143,22 +143,22 @@ License: Creative Commons (CC BY-SA 4.0)
 
 1. تحميل السكريبت:
 
-wget [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_fixed.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_fixed.sh)
+wget [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
 
 
 2. تعديل البيانات (الدومين والإيميل):
 
-nano koha_installer_fixed.sh
+nano koha_installer_27.sh
 
 
 3. منح صلاحيات التنفيذ:
 
-chmod +x koha_installer_fixed.sh
+chmod +x koha_installer_27.sh
 
 
 4. تشغيل المثبت:
 
-sudo ./koha_installer_fixed.sh
+sudo ./koha_installer_27.sh
 
 
 5. الانتهاء:
