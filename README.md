@@ -1,6 +1,7 @@
 <!-- ENGLISH SECTION -->
 <div dir="ltr">
 Koha Golden Installer - The Comprehensive Solution (v27.1)
+    
 About This Project
 This script is the culmination of 24 years of experience in Information Systems. It is not just an installer; it is a production-grade orchestration tool designed to deploy the Koha Integrated Library System (ILS) on Ubuntu 24.04 LTS with enterprise-level stability, security, and performance.
 It addresses the most complex challenges faced by librarians and system administrators, including character encoding issues, WAF configuration, and resource optimization.
