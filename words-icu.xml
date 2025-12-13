@@ -1,378 +1,379 @@
 <icu_chain locale="ar">
   <!-- 1. تنظيف أولي للأرقام والرموز -->
-  <transliterate rule="\'>\ "/>
-  <transliterate rule="[:Number:] { '-' >  "/>
+  <!-- قمت بإزالة/تصحيح الأسطر المعطوبة الأصلية واستعملت تحويلات ثابتة للأرقام والتحكم -->
+  <transform rule="[[:Number:]] Remove"/>
   <transform rule="[:Control:] Any-Remove"/>
-  
+
   <!-- 2. التقسيم -->
   <tokenize rule="l"/>
-  
+
   <!-- 3. إزالة الرموز والمسافات -->
   <transform rule="[[:WhiteSpace:][:Punctuation:]] Remove"/>
-  
+
   <!-- 4. معالجة التشكيل وتوحيد الحروف (Normalization) -->
   <transform rule="NFD"/>
   <transform rule="[:Nonspacing Mark:] Remove"/>
   <transform rule="NFC"/>
 
   <!-- توحيد الألفات (أ إ آ) إلى ا -->
-  <transliterate rule="[أإآٱ] > ا"/>
-  
+  <transliterate rule="[أإآٱ] &gt; ا;"/>
+
   <!-- توحيد الياء المتطرفة فقط (في آخر الكلمة) -->
-  <transliterate rule="ى$ > ي"/>
-  
+  <transliterate rule="ى$ &gt; ي;"/>
+
   <!-- توحيد التاء المربوطة في آخر الكلمة -->
-  <transliterate rule="ة$ > ه"/>
+  <transliterate rule="ة$ &gt; ه;"/>
 
   <!-- ================================================== -->
   <!-- 4.5 قائمة الاستثناءات (حماية الـ الأصلية) - موسعة -->
   <!-- نقوم بإضافة رمز _ لحماية الكلمة من الحذف اللاحق -->
   <!-- ================================================== -->
-  
+
   <!-- أسماء الله الحسنى وكلمات دينية -->
-  <transliterate rule="^الله > _الله"/>
-  <transliterate rule="^بالله > _بالله"/>
-  <transliterate rule="^والله > _والله"/>
-  <transliterate rule="^تالله > _تالله"/>
-  <transliterate rule="^لله > _لله"/>
-  <transliterate rule="^اله > _اله"/> <!-- إله -->
-  <transliterate rule="^الهة > _الهة"/> <!-- آلهة -->
+  <transliterate rule="^'الله' &gt; '_الله';"/>
+  <transliterate rule="^'بالله' &gt; '_بالله';"/>
+  <transliterate rule="^'والله' &gt; '_والله';"/>
+  <transliterate rule="^'تالله' &gt; '_تالله';"/>
+  <transliterate rule="^'لله' &gt; '_لله';"/>
+  <transliterate rule="^'اله' &gt; '_اله';"/> <!-- إله -->
+  <transliterate rule="^'الهة' &gt; '_الهة';"/> <!-- آلهة -->
 
   <!-- أسماء علم وأشخاص (إلياس، أليس، إلخ) -->
-  <transliterate rule="^الياس > _الياس"/>
-  <transliterate rule="^الياسين > _الياسين"/>
-  <transliterate rule="^اليس > _اليس"/>
-  <transliterate rule="^اليسا > _اليسا"/>
-  <transliterate rule="^اليكس > _اليكس"/>
-  <transliterate rule="^الكسندر > _الكسندر"/>
-  <transliterate rule="^الما > _الما"/>
-  <transliterate rule="^الفت > _الفت"/> <!-- ألفت -->
-  <transliterate rule="^اليف > _اليف"/> <!-- أليف -->
+  <transliterate rule="^'الياس' &gt; '_الياس';"/>
+  <transliterate rule="^'الياسين' &gt; '_الياسين';"/>
+  <transliterate rule="^'اليس' &gt; '_اليس';"/>
+  <transliterate rule="^'اليسا' &gt; '_اليسا';"/>
+  <transliterate rule="^'اليكس' &gt; '_اليكس';"/>
+  <transliterate rule="^'الكسندر' &gt; '_الكسندر';"/>
+  <transliterate rule="^'الما' &gt; '_الما';"/>
+  <transliterate rule="^'الفت' &gt; '_الفت';"/> <!-- ألفت -->
+  <transliterate rule="^'اليف' &gt; '_اليف';"/> <!-- أليف -->
 
   <!-- أسماء دول وأماكن -->
-  <transliterate rule="^المانيا > _المانيا"/>
-  <transliterate rule="^البانيا > _البانيا"/>
-  <transliterate rule="^الاسكا > _الاسكا"/>
-  <transliterate rule="^الاباما > _الاباما"/>
-  <transliterate rule="^الزاس > _الزاس"/>
-  <transliterate rule="^الماظة > _الماظة"/>
+  <transliterate rule="^'المانيا' &gt; '_المانيا';"/>
+  <transliterate rule="^'البانيا' &gt; '_البانيا';"/>
+  <transliterate rule="^'الاسكا' &gt; '_الاسكا';"/>
+  <transliterate rule="^'الاباما' &gt; '_الاباما';"/>
+  <transliterate rule="^'الزاس' &gt; '_الزاس';"/>
+  <transliterate rule="^'الماظة' &gt; '_الماظة';"/>
 
   <!-- كلمات شائعة ومصطلحات -->
-  <transliterate rule="^الوان > _الوان"/>
-  <transliterate rule="^العاب > _العاب"/>
-  <transliterate rule="^الماس > _الماس"/>
-  <transliterate rule="^البان > _البان"/>
-  <transliterate rule="^الحان > _الحان"/>
-  <transliterate rule="^اليم > _اليم"/>
-  <transliterate rule="^الفاظ > _الفاظ"/>
-  <transliterate rule="^السون > _السون"/>
-  <transliterate rule="^المنيوم > _المنيوم"/>
-  <transliterate rule="^الكترون > _الكترون"/>
-  <transliterate rule="^الكترونيات > _الكترونيات"/>
-  <transliterate rule="^الكتروني > _الكتروني"/>
-  <transliterate rule="^الياف > _الياف"/> <!-- ألياف -->
-  <transliterate rule="^البوم > _البوم"/> <!-- ألبوم -->
-  <transliterate rule="^البومات > _البومات"/>
-  <transliterate rule="^الف > _الف"/> <!-- ألف -->
-  <transliterate rule="^الفين > _الفين"/>
-  <transliterate rule="^الفية > _الفية"/>
-  <transliterate rule="^الوف > _الوف"/>
+  <transliterate rule="^'الوان' &gt; '_الوان';"/>
+  <transliterate rule="^'العاب' &gt; '_العاب';"/>
+  <transliterate rule="^'الماس' &gt; '_الماس';"/>
+  <transliterate rule="^'البان' &gt; '_البان';"/>
+  <transliterate rule="^'الحان' &gt; '_الحان';"/>
+  <transliterate rule="^'اليم' &gt; '_اليم';"/>
+  <transliterate rule="^'الفاظ' &gt; '_الفاظ';"/>
+  <transliterate rule="^'السون' &gt; '_السون';"/>
+  <transliterate rule="^'المنيوم' &gt; '_المنيوم';"/>
+  <transliterate rule="^'الكترون' &gt; '_الكترون';"/>
+  <transliterate rule="^'الكترونيات' &gt; '_الكترونيات';"/>
+  <transliterate rule="^'الكتروني' &gt; '_الكتروني';"/>
+  <transliterate rule="^'الياف' &gt; '_الياف';"/> <!-- ألياف -->
+  <transliterate rule="^'البوم' &gt; '_البوم';"/> <!-- ألبوم -->
+  <transliterate rule="^'البومات' &gt; '_البومات';"/>
+  <transliterate rule="^'الف' &gt; '_الف';"/> <!-- ألف -->
+  <transliterate rule="^'الفين' &gt; '_الفين';"/>
+  <transliterate rule="^'الفية' &gt; '_الفية';"/>
+  <transliterate rule="^'الوف' &gt; '_الوف';"/>
 
   <!-- مصادر وأفعال تبدأ بهمزة (إلهام، إلغاء، ألم) -->
-  <transliterate rule="^الم > _الم"/> <!-- ألم -->
-  <transliterate rule="^الام > _الام"/> <!-- آلام -->
-  <transliterate rule="^الهام > _الهام"/> <!-- إلهام -->
-  <transliterate rule="^الحاد > _الحاد"/> <!-- إلحاد -->
-  <transliterate rule="^الزام > _الزام"/> <!-- إلزام -->
-  <transliterate rule="^الغاء > _الغاء"/> <!-- إلغاء -->
-  <transliterate rule="^القاء > _القاء"/> <!-- إلقاء -->
-  <transliterate rule="^الحاق > _الحاق"/> <!-- إلحاق -->
-  <transliterate rule="^المان > _المان"/> <!-- إلمام -->
-  <transliterate rule="^الفة > _الفة"/> <!-- ألفة -->
-  <transliterate rule="^الية > _الية"/> <!-- آلية -->
-  <transliterate rule="^الي > _الي"/> <!-- آلي -->
-  <transliterate rule="^الق > _الق"/> <!-- ألق -->
+  <transliterate rule="^'الم' &gt; '_الم';"/> <!-- ألم -->
+  <transliterate rule="^'الام' &gt; '_الام';"/> <!-- آلام -->
+  <transliterate rule="^'الهام' &gt; '_الهام';"/> <!-- إلهام -->
+  <transliterate rule="^'الحاد' &gt; '_الحاد';"/> <!-- إلحاد -->
+  <transliterate rule="^'الزام' &gt; '_الزام';"/> <!-- إلزام -->
+  <transliterate rule="^'الغاء' &gt; '_الغاء';"/> <!-- إلغاء -->
+  <transliterate rule="^'القاء' &gt; '_القاء';"/> <!-- إلقاء -->
+  <transliterate rule="^'الحاق' &gt; '_الحاق';"/> <!-- إلحاق -->
+  <transliterate rule="^'المان' &gt; '_المان';"/> <!-- إلمام -->
+  <transliterate rule="^'الفة' &gt; '_الفة';"/> <!-- ألفة -->
+  <transliterate rule="^'الية' &gt; '_الية';"/> <!-- آلية -->
+  <transliterate rule="^'الي' &gt; '_الي';"/> <!-- آلي -->
+  <transliterate rule="^'الق' &gt; '_الق';"/> <!-- ألق -->
 
   <!-- أدوات وضمائر وظروف (لا يجب حذف ال منها) -->
-  <transliterate rule="^الذي > _الذي"/>
-  <transliterate rule="^التي > _التي"/>
-  <transliterate rule="^الذين > _الذين"/>
-  <transliterate rule="^اللاتي > _اللاتي"/>
-  <transliterate rule="^اللواتي > _اللواتي"/>
-  <transliterate rule="^اللائي > _اللائي"/>
-  <transliterate rule="^الان > _الان"/> <!-- الآن -->
-  <transliterate rule="^الا > _الا"/> <!-- إلا -->
-  <transliterate rule="^الي > _الي"/> <!-- إلي -->
-  <transliterate rule="^الى > _الى"/> <!-- إلى -->
-  <transliterate rule="^الو > _الو"/> <!-- ألو -->
+  <transliterate rule="^'الذي' &gt; '_الذي';"/>
+  <transliterate rule="^'التي' &gt; '_التي';"/>
+  <transliterate rule="^'الذين' &gt; '_الذين';"/>
+  <transliterate rule="^'اللاتي' &gt; '_اللاتي';"/>
+  <transliterate rule="^'اللواتي' &gt; '_اللواتي';"/>
+  <transliterate rule="^'اللائي' &gt; '_اللائي';"/>
+  <transliterate rule="^'الان' &gt; '_الان';"/> <!-- الآن -->
+  <transliterate rule="^'الا' &gt; '_الا';"/> <!-- إلا -->
+  <transliterate rule="^'الي' &gt; '_الي';"/> <!-- إلي -->
+  <transliterate rule="^'الى' &gt; '_الى';"/> <!-- إلى -->
+  <transliterate rule="^'الو' &gt; '_الو';"/> <!-- ألو -->
 
   <!-- كلمات أجنبية معربة شائعة -->
-  <transliterate rule="^الترا > _الترا"/> <!-- Ultra -->
-  <transliterate rule="^التيما > _التيما"/>
-  <transliterate rule="^الفا > _الفا"/> <!-- Alpha -->
-  <transliterate rule="^الما > _الما"/> <!-- Alma -->
+  <transliterate rule="^'الترا' &gt; '_الترا';"/> <!-- Ultra -->
+  <transliterate rule="^'التيما' &gt; '_التيما';"/>
+  <transliterate rule="^'الفا' &gt; '_الفا';"/> <!-- Alpha -->
+  <transliterate rule="^'الما' &gt; '_الما';"/> <!-- Alma -->
 
   <!-- ================================================== -->
 
   <!-- 5. إزالة "ال" التعريف ومشتقاتها (لكل الحروف الهجائية) -->
-  
+
   <!-- (أ) مجموعة الـ التعريف المجردة -->
-  <transliterate rule="^الا > ا"/>
-  <transliterate rule="^الب > ب"/>
-  <transliterate rule="^الت > ت"/>
-  <transliterate rule="^الث > ث"/>
-  <transliterate rule="^الج > ج"/>
-  <transliterate rule="^الح > ح"/>
-  <transliterate rule="^الخ > خ"/>
-  <transliterate rule="^الد > د"/>
-  <transliterate rule="^الذ > ذ"/>
-  <transliterate rule="^الر > ر"/>
-  <transliterate rule="^الز > ز"/>
-  <transliterate rule="^الس > س"/>
-  <transliterate rule="^الش > ش"/>
-  <transliterate rule="^الص > ص"/>
-  <transliterate rule="^الض > ض"/>
-  <transliterate rule="^الط > ط"/>
-  <transliterate rule="^الظ > ظ"/>
-  <transliterate rule="^الع > ع"/>
-  <transliterate rule="^الغ > غ"/>
-  <transliterate rule="^الف > ف"/>
-  <transliterate rule="^الق > ق"/>
-  <transliterate rule="^الك > ك"/>
-  <transliterate rule="^الل > ل"/>
-  <transliterate rule="^الم > م"/>
-  <transliterate rule="^الن > ن"/>
-  <transliterate rule="^اله > ه"/>
-  <transliterate rule="^الو > و"/>
-  <transliterate rule="^الي > ي"/>
+  <transliterate rule="^'الا' &gt; 'ا';"/>
+  <transliterate rule="^'الب' &gt; 'ب';"/>
+  <transliterate rule="^'الت' &gt; 'ت';"/>
+  <transliterate rule="^'الث' &gt; 'ث';"/>
+  <transliterate rule="^'الج' &gt; 'ج';"/>
+  <transliterate rule="^'الح' &gt; 'ح';"/>
+  <transliterate rule="^'الخ' &gt; 'خ';"/>
+  <transliterate rule="^'الد' &gt; 'د';"/>
+  <transliterate rule="^'الذ' &gt; 'ذ';"/>
+  <transliterate rule="^'الر' &gt; 'ر';"/>
+  <transliterate rule="^'الز' &gt; 'ز';"/>
+  <transliterate rule="^'الس' &gt; 'س';"/>
+  <transliterate rule="^'الش' &gt; 'ش';"/>
+  <transliterate rule="^'الص' &gt; 'ص';"/>
+  <transliterate rule="^'الض' &gt; 'ض';"/>
+  <transliterate rule="^'الط' &gt; 'ط';"/>
+  <transliterate rule="^'الظ' &gt; 'ظ';"/>
+  <transliterate rule="^'الع' &gt; 'ع';"/>
+  <transliterate rule="^'الغ' &gt; 'غ';"/>
+  <transliterate rule="^'الف' &gt; 'ف';"/>
+  <transliterate rule="^'الق' &gt; 'ق';"/>
+  <transliterate rule="^'الك' &gt; 'ك';"/>
+  <transliterate rule="^'الل' &gt; 'ل';"/>
+  <transliterate rule="^'الم' &gt; 'م';"/>
+  <transliterate rule="^'الن' &gt; 'ن';"/>
+  <transliterate rule="^'اله' &gt; 'ه';"/>
+  <transliterate rule="^'الو' &gt; 'و';"/>
+  <transliterate rule="^'الي' &gt; 'ي';"/>
 
   <!-- (ب) مجموعة "والـ" (الواو + الـ) -->
-  <transliterate rule="^والا > ا"/>
-  <transliterate rule="^والب > ب"/>
-  <transliterate rule="^والت > ت"/>
-  <transliterate rule="^والث > ث"/>
-  <transliterate rule="^والج > ج"/>
-  <transliterate rule="^والح > ح"/>
-  <transliterate rule="^والخ > خ"/>
-  <transliterate rule="^والد > د"/>
-  <transliterate rule="^والذ > ذ"/>
-  <transliterate rule="^والر > ر"/>
-  <transliterate rule="^والز > ز"/>
-  <transliterate rule="^والس > س"/>
-  <transliterate rule="^والش > ش"/>
-  <transliterate rule="^والص > ص"/>
-  <transliterate rule="^والض > ض"/>
-  <transliterate rule="^والط > ط"/>
-  <transliterate rule="^والظ > ظ"/>
-  <transliterate rule="^والع > ع"/>
-  <transliterate rule="^والغ > غ"/>
-  <transliterate rule="^والف > ف"/>
-  <transliterate rule="^والق > ق"/>
-  <transliterate rule="^والك > ك"/>
-  <transliterate rule="^والل > ل"/>
-  <transliterate rule="^والم > م"/>
-  <transliterate rule="^والن > ن"/>
-  <transliterate rule="^واله > ه"/>
-  <transliterate rule="^والو > و"/>
-  <transliterate rule="^والي > ي"/>
+  <transliterate rule="^'والا' &gt; 'ا';"/>
+  <transliterate rule="^'والب' &gt; 'ب';"/>
+  <transliterate rule="^'والت' &gt; 'ت';"/>
+  <transliterate rule="^'والث' &gt; 'ث';"/>
+  <transliterate rule="^'والج' &gt; 'ج';"/>
+  <transliterate rule="^'والح' &gt; 'ح';"/>
+  <transliterate rule="^'والخ' &gt; 'خ';"/>
+  <transliterate rule="^'والد' &gt; 'د';"/>
+  <transliterate rule="^'والذ' &gt; 'ذ';"/>
+  <transliterate rule="^'والر' &gt; 'ر';"/>
+  <transliterate rule="^'والز' &gt; 'ز';"/>
+  <transliterate rule="^'والس' &gt; 'س';"/>
+  <transliterate rule="^'والش' &gt; 'ش';"/>
+  <transliterate rule="^'والص' &gt; 'ص';"/>
+  <transliterate rule="^'والض' &gt; 'ض';"/>
+  <transliterate rule="^'والط' &gt; 'ط';"/>
+  <transliterate rule="^'والظ' &gt; 'ظ';"/>
+  <transliterate rule="^'والع' &gt; 'ع';"/>
+  <transliterate rule="^'والغ' &gt; 'غ';"/>
+  <transliterate rule="^'والف' &gt; 'ف';"/>
+  <transliterate rule="^'والق' &gt; 'ق';"/>
+  <transliterate rule="^'والك' &gt; 'ك';"/>
+  <transliterate rule="^'والل' &gt; 'ل';"/>
+  <transliterate rule="^'والم' &gt; 'م';"/>
+  <transliterate rule="^'والن' &gt; 'ن';"/>
+  <transliterate rule="^'واله' &gt; 'ه';"/>
+  <transliterate rule="^'والو' &gt; 'و';"/>
+  <transliterate rule="^'والي' &gt; 'ي';"/>
 
   <!-- (ج) مجموعة "فالـ" (الفاء + الـ) -->
-  <transliterate rule="^فالا > ا"/>
-  <transliterate rule="^فالب > ب"/>
-  <transliterate rule="^فالت > ت"/>
-  <transliterate rule="^فالث > ث"/>
-  <transliterate rule="^فالج > ج"/>
-  <transliterate rule="^فالح > ح"/>
-  <transliterate rule="^فالخ > خ"/>
-  <transliterate rule="^فالد > د"/>
-  <transliterate rule="^فالذ > ذ"/>
-  <transliterate rule="^فالر > ر"/>
-  <transliterate rule="^فالز > ز"/>
-  <transliterate rule="^فالس > س"/>
-  <transliterate rule="^فالش > ش"/>
-  <transliterate rule="^فالص > ص"/>
-  <transliterate rule="^فالض > ض"/>
-  <transliterate rule="^فالط > ط"/>
-  <transliterate rule="^فالظ > ظ"/>
-  <transliterate rule="^فالع > ع"/>
-  <transliterate rule="^فالغ > غ"/>
-  <transliterate rule="^فالف > ف"/>
-  <transliterate rule="^فالق > ق"/>
-  <transliterate rule="^فالك > ك"/>
-  <transliterate rule="^فالل > ل"/>
-  <transliterate rule="^فالم > م"/>
-  <transliterate rule="^فالن > ن"/>
-  <transliterate rule="^فاله > ه"/>
-  <transliterate rule="^فالو > و"/>
-  <transliterate rule="^فالي > ي"/>
+  <transliterate rule="^'فالا' &gt; 'ا';"/>
+  <transliterate rule="^'فالب' &gt; 'ب';"/>
+  <transliterate rule="^'فالت' &gt; 'ت';"/>
+  <transliterate rule="^'فالث' &gt; 'ث';"/>
+  <transliterate rule="^'فالج' &gt; 'ج';"/>
+  <transliterate rule="^'فالح' &gt; 'ح';"/>
+  <transliterate rule="^'فالخ' &gt; 'خ';"/>
+  <transliterate rule="^'فالد' &gt; 'د';"/>
+  <transliterate rule="^'فالذ' &gt; 'ذ';"/>
+  <transliterate rule="^'فالر' &gt; 'ر';"/>
+  <transliterate rule="^'فالز' &gt; 'ز';"/>
+  <transliterate rule="^'فالس' &gt; 'س';"/>
+  <transliterate rule="^'فالش' &gt; 'ش';"/>
+  <transliterate rule="^'فالص' &gt; 'ص';"/>
+  <transliterate rule="^'فالض' &gt; 'ض';"/>
+  <transliterate rule="^'فالط' &gt; 'ط';"/>
+  <transliterate rule="^'فالظ' &gt; 'ظ';"/>
+  <transliterate rule="^'فالع' &gt; 'ع';"/>
+  <transliterate rule="^'فالغ' &gt; 'غ';"/>
+  <transliterate rule="^'فالف' &gt; 'ف';"/>
+  <transliterate rule="^'فالق' &gt; 'ق';"/>
+  <transliterate rule="^'فالك' &gt; 'ك';"/>
+  <transliterate rule="^'فالل' &gt; 'ل';"/>
+  <transliterate rule="^'فالم' &gt; 'م';"/>
+  <transliterate rule="^'فالن' &gt; 'ن';"/>
+  <transliterate rule="^'فاله' &gt; 'ه';"/>
+  <transliterate rule="^'فالو' &gt; 'و';"/>
+  <transliterate rule="^'فالي' &gt; 'ي';"/>
 
   <!-- (د) مجموعة "كالـ" (الكاف + الـ) -->
-  <transliterate rule="^كالا > ا"/>
-  <transliterate rule="^كالب > ب"/>
-  <transliterate rule="^كالت > ت"/>
-  <transliterate rule="^كالث > ث"/>
-  <transliterate rule="^كالج > ج"/>
-  <transliterate rule="^كالح > ح"/>
-  <transliterate rule="^كالخ > خ"/>
-  <transliterate rule="^كالد > د"/>
-  <transliterate rule="^كالذ > ذ"/>
-  <transliterate rule="^كالر > ر"/>
-  <transliterate rule="^كالز > ز"/>
-  <transliterate rule="^كالس > س"/>
-  <transliterate rule="^كالش > ش"/>
-  <transliterate rule="^كالص > ص"/>
-  <transliterate rule="^كالض > ض"/>
-  <transliterate rule="^كالط > ط"/>
-  <transliterate rule="^كالظ > ظ"/>
-  <transliterate rule="^كالع > ع"/>
-  <transliterate rule="^كالغ > غ"/>
-  <transliterate rule="^كالف > ف"/>
-  <transliterate rule="^كالق > ق"/>
-  <transliterate rule="^كالك > ك"/>
-  <transliterate rule="^كالل > ل"/>
-  <transliterate rule="^كالم > م"/>
-  <transliterate rule="^كالن > ن"/>
-  <transliterate rule="^كاله > ه"/>
-  <transliterate rule="^كالو > و"/>
-  <transliterate rule="^كالي > ي"/>
+  <transliterate rule="^'كالا' &gt; 'ا';"/>
+  <transliterate rule="^'كالب' &gt; 'ب';"/>
+  <transliterate rule="^'كالت' &gt; 'ت';"/>
+  <transliterate rule="^'كالث' &gt; 'ث';"/>
+  <transliterate rule="^'كالج' &gt; 'ج';"/>
+  <transliterate rule="^'كالح' &gt; 'ح';"/>
+  <transliterate rule="^'كالخ' &gt; 'خ';"/>
+  <transliterate rule="^'كالد' &gt; 'د';"/>
+  <transliterate rule="^'كالذ' &gt; 'ذ';"/>
+  <transliterate rule="^'كالر' &gt; 'ر';"/>
+  <transliterate rule="^'كالز' &gt; 'ز';"/>
+  <transliterate rule="^'كالس' &gt; 'س';"/>
+  <transliterate rule="^'كالش' &gt; 'ش';"/>
+  <transliterate rule="^'كالص' &gt; 'ص';"/>
+  <transliterate rule="^'كالض' &gt; 'ض';"/>
+  <transliterate rule="^'كالط' &gt; 'ط';"/>
+  <transliterate rule="^'كالظ' &gt; 'ظ';"/>
+  <transliterate rule="^'كالع' &gt; 'ع';"/>
+  <transliterate rule="^'كالغ' &gt; 'غ';"/>
+  <transliterate rule="^'كالف' &gt; 'ف';"/>
+  <transliterate rule="^'كالق' &gt; 'ق';"/>
+  <transliterate rule="^'كالك' &gt; 'ك';"/>
+  <transliterate rule="^'كالل' &gt; 'ل';"/>
+  <transliterate rule="^'كالم' &gt; 'م';"/>
+  <transliterate rule="^'كالن' &gt; 'ن';"/>
+  <transliterate rule="^'كاله' &gt; 'ه';"/>
+  <transliterate rule="^'كالو' &gt; 'و';"/>
+  <transliterate rule="^'كالي' &gt; 'ي';"/>
 
   <!-- (هـ) مجموعة "بالـ" (الباء + الـ) -->
-  <transliterate rule="^بالا > ا"/>
-  <transliterate rule="^بالب > ب"/>
-  <transliterate rule="^بالت > ت"/>
-  <transliterate rule="^بالث > ث"/>
-  <transliterate rule="^بالج > ج"/>
-  <transliterate rule="^بالح > ح"/>
-  <transliterate rule="^بالخ > خ"/>
-  <transliterate rule="^بالد > د"/>
-  <transliterate rule="^بالذ > ذ"/>
-  <transliterate rule="^بالر > ر"/>
-  <transliterate rule="^بالز > ز"/>
-  <transliterate rule="^بالس > س"/>
-  <transliterate rule="^بالش > ش"/>
-  <transliterate rule="^بالص > ص"/>
-  <transliterate rule="^بالض > ض"/>
-  <transliterate rule="^بالط > ط"/>
-  <transliterate rule="^بالظ > ظ"/>
-  <transliterate rule="^بالع > ع"/>
-  <transliterate rule="^بالغ > غ"/>
-  <transliterate rule="^بالف > ف"/>
-  <transliterate rule="^بالق > ق"/>
-  <transliterate rule="^بالك > ك"/>
-  <transliterate rule="^بالل > ل"/>
-  <transliterate rule="^بالم > م"/>
-  <transliterate rule="^بالن > ن"/>
-  <transliterate rule="^باله > ه"/>
-  <transliterate rule="^بالو > و"/>
-  <transliterate rule="^بالي > ي"/>
+  <transliterate rule="^'بالا' &gt; 'ا';"/>
+  <transliterate rule="^'بالب' &gt; 'ب';"/>
+  <transliterate rule="^'بالت' &gt; 'ت';"/>
+  <transliterate rule="^'بالث' &gt; 'ث';"/>
+  <transliterate rule="^'بالج' &gt; 'ج';"/>
+  <transliterate rule="^'بالح' &gt; 'ح';"/>
+  <transliterate rule="^'بالخ' &gt; 'خ';"/>
+  <transliterate rule="^'بالد' &gt; 'د';"/>
+  <transliterate rule="^'بالذ' &gt; 'ذ';"/>
+  <transliterate rule="^'بالر' &gt; 'ر';"/>
+  <transliterate rule="^'بالز' &gt; 'ز';"/>
+  <transliterate rule="^'بالس' &gt; 'س';"/>
+  <transliterate rule="^'بالش' &gt; 'ش';"/>
+  <transliterate rule="^'بالص' &gt; 'ص';"/>
+  <transliterate rule="^'بالض' &gt; 'ض';"/>
+  <transliterate rule="^'بالط' &gt; 'ط';"/>
+  <transliterate rule="^'بالظ' &gt; 'ظ';"/>
+  <transliterate rule="^'بالع' &gt; 'ع';"/>
+  <transliterate rule="^'بالغ' &gt; 'غ';"/>
+  <transliterate rule="^'بالف' &gt; 'ف';"/>
+  <transliterate rule="^'بالق' &gt; 'ق';"/>
+  <transliterate rule="^'بالك' &gt; 'ك';"/>
+  <transliterate rule="^'بالل' &gt; 'ل';"/>
+  <transliterate rule="^'بالم' &gt; 'م';"/>
+  <transliterate rule="^'بالن' &gt; 'ن';"/>
+  <transliterate rule="^'باله' &gt; 'ه';"/>
+  <transliterate rule="^'بالو' &gt; 'و';"/>
+  <transliterate rule="^'بالي' &gt; 'ي';"/>
 
   <!-- (و) مجموعة "للـ" (اللام + الـ) - التعامل مع اللام المزدوجة -->
-  <transliterate rule="^للا > ا"/>
-  <transliterate rule="^للب > ب"/>
-  <transliterate rule="^للت > ت"/>
-  <transliterate rule="^للث > ث"/>
-  <transliterate rule="^للج > ج"/>
-  <transliterate rule="^للح > ح"/>
-  <transliterate rule="^للخ > خ"/>
-  <transliterate rule="^للد > د"/>
-  <transliterate rule="^للذ > ذ"/>
-  <transliterate rule="^للر > ر"/>
-  <transliterate rule="^للز > ز"/>
-  <transliterate rule="^للس > س"/>
-  <transliterate rule="^للش > ش"/>
-  <transliterate rule="^للص > ص"/>
-  <transliterate rule="^للض > ض"/>
-  <transliterate rule="^للط > ط"/>
-  <transliterate rule="^للظ > ظ"/>
-  <transliterate rule="^للع > ع"/>
-  <transliterate rule="^للغ > غ"/>
-  <transliterate rule="^للف > ف"/>
-  <transliterate rule="^للق > ق"/>
-  <transliterate rule="^للك > ك"/>
-  <transliterate rule="^للل > ل"/>
-  <transliterate rule="^للم > م"/>
-  <transliterate rule="^للن > ن"/>
-  <transliterate rule="^لله > ه"/>
-  <transliterate rule="^للو > و"/>
-  <transliterate rule="^للي > ي"/>
+  <transliterate rule="^'للا' &gt; 'ا';"/>
+  <transliterate rule="^'للب' &gt; 'ب';"/>
+  <transliterate rule="^'للت' &gt; 'ت';"/>
+  <transliterate rule="^'للث' &gt; 'ث';"/>
+  <transliterate rule="^'للج' &gt; 'ج';"/>
+  <transliterate rule="^'للح' &gt; 'ح';"/>
+  <transliterate rule="^'للخ' &gt; 'خ';"/>
+  <transliterate rule="^'للد' &gt; 'د';"/>
+  <transliterate rule="^'للذ' &gt; 'ذ';"/>
+  <transliterate rule="^'للر' &gt; 'ر';"/>
+  <transliterate rule="^'للز' &gt; 'ز';"/>
+  <transliterate rule="^'للس' &gt; 'س';"/>
+  <transliterate rule="^'للش' &gt; 'ش';"/>
+  <transliterate rule="^'للص' &gt; 'ص';"/>
+  <transliterate rule="^'للض' &gt; 'ض';"/>
+  <transliterate rule="^'للط' &gt; 'ط';"/>
+  <transliterate rule="^'للظ' &gt; 'ظ';"/>
+  <transliterate rule="^'للع' &gt; 'ع';"/>
+  <transliterate rule="^'للغ' &gt; 'غ';"/>
+  <transliterate rule="^'للف' &gt; 'ف';"/>
+  <transliterate rule="^'للق' &gt; 'ق';"/>
+  <transliterate rule="^'للك' &gt; 'ك';"/>
+  <transliterate rule="^'للل' &gt; 'ل';"/>
+  <transliterate rule="^'للم' &gt; 'م';"/>
+  <transliterate rule="^'للن' &gt; 'ن';"/>
+  <transliterate rule="^'لله' &gt; 'ه';"/>
+  <transliterate rule="^'للو' &gt; 'و';"/>
+  <transliterate rule="^'للي' &gt; 'ي';"/>
 
   <!-- ================================================== -->
   <!-- 6. المترادفات (Synonyms) - توحيد المصطلحات -->
   <!-- يتم وضعها هنا بعد إزالة الـ التعريف لضمان شمولية البحث -->
   <!-- ================================================== -->
-  
+
   <!-- أجهزة وتقنية (توحيد المصطلحات التقنية) -->
-  <transliterate rule="^جوال > محمول"/>
-  <transliterate rule="^موبايل > محمول"/>
-  <transliterate rule="^خلوي > محمول"/>
-  <transliterate rule="^تليفون > هاتف"/> <!-- يمكن توحيدها على هاتف أو محمول حسب الرغبة -->
-  <transliterate rule="^حاسب > كمبيوتر"/>
-  <transliterate rule="^حاسوب > كمبيوتر"/>
-  <transliterate rule="^لابتوب > كمبيوتر"/>
-  <transliterate rule="^لاب > كمبيوتر"/>
-  <transliterate rule="^ديسكتوب > كمبيوتر"/>
-  <transliterate rule="^بي سي > كمبيوتر"/>
-  <transliterate rule="^تابلت > لوحي"/>
-  <transliterate rule="^ايباد > لوحي"/>
-  <transliterate rule="^سيرفر > خادم"/>
-  <transliterate rule="^داتابيز > قاعدة بيانات"/>
-  <transliterate rule="^انترنت > شبكة"/>
-  <transliterate rule="^نت > شبكة"/>
-  <transliterate rule="^واي فاي > لاسلكي"/>
-  <transliterate rule="^ابليكيشن > تطبيق"/>
-  <transliterate rule="^سوفتوير > برمجيات"/>
-  <transliterate rule="^هاردوير > عتاد"/>
-  <transliterate rule="^برينتر > طابعة"/>
-  <transliterate rule="^سكانر > ماسح ضوئي"/>
-  <transliterate rule="^ماوس > فارة"/>
-  <transliterate rule="^كيبورد > لوحة مفاتيح"/>
-  <transliterate rule="^هارد > قرص صلب"/>
-  <transliterate rule="^فلاشة > ذاكرة وميضة"/>
-  <transliterate rule="^يو اس بي > ذاكرة وميضة"/>
-  <transliterate rule="^سكرين > شاشة"/>
-  <transliterate rule="^مونيتور > شاشة"/>
-  <transliterate rule="^بروجيكتور > عارض"/>
+  <transliterate rule="^'جوال' &gt; 'محمول';"/>
+  <transliterate rule="^'موبايل' &gt; 'محمول';"/>
+  <transliterate rule="^'خلوي' &gt; 'محمول';"/>
+  <transliterate rule="^'تليفون' &gt; 'هاتف';"/> <!-- يمكن توحيدها على هاتف أو محمول حسب الرغبة -->
+  <transliterate rule="^'حاسب' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'حاسوب' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'لابتوب' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'لاب' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'ديسكتوب' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'بي سي' &gt; 'كمبيوتر';"/>
+  <transliterate rule="^'تابلت' &gt; 'لوحي';"/>
+  <transliterate rule="^'ايباد' &gt; 'لوحي';"/>
+  <transliterate rule="^'سيرفر' &gt; 'خادم';"/>
+  <transliterate rule="^'داتابيز' &gt; 'قاعدة بيانات';"/>
+  <transliterate rule="^'انترنت' &gt; 'شبكة';"/>
+  <transliterate rule="^'نت' &gt; 'شبكة';"/>
+  <transliterate rule="^'واي فاي' &gt; 'لاسلكي';"/>
+  <transliterate rule="^'ابليكيشن' &gt; 'تطبيق';"/>
+  <transliterate rule="^'سوفتوير' &gt; 'برمجيات';"/>
+  <transliterate rule="^'هاردوير' &gt; 'عتاد';"/>
+  <transliterate rule="^'برينتر' &gt; 'طابعة';"/>
+  <transliterate rule="^'سكانر' &gt; 'ماسح ضوئي';"/>
+  <transliterate rule="^'ماوس' &gt; 'فارة';"/>
+  <transliterate rule="^'كيبورد' &gt; 'لوحة مفاتيح';"/>
+  <transliterate rule="^'هارد' &gt; 'قرص صلب';"/>
+  <transliterate rule="^'فلاشة' &gt; 'ذاكرة وميضة';"/>
+  <transliterate rule="^'يو اس بي' &gt; 'ذاكرة وميضة';"/>
+  <transliterate rule="^'سكرين' &gt; 'شاشة';"/>
+  <transliterate rule="^'مونيتور' &gt; 'شاشة';"/>
+  <transliterate rule="^'بروجيكتور' &gt; 'عارض';"/>
 
   <!-- أوعية المعلومات والمكتبات -->
-  <transliterate rule="^سي دي > قرص"/>
-  <transliterate rule="^دي في دي > قرص"/>
-  <transliterate rule="^قرص مدمج > قرص"/>
-  <transliterate rule="^جورنال > دورية"/>
-  <transliterate rule="^مجلة > دورية"/> <!-- خيار: يمكن فصلها إذا أردت -->
-  <transliterate rule="^قاموس > معجم"/>
-  <transliterate rule="^خريطة > اطلس"/> <!-- لتوحيد البحث الجغرافي -->
-  <transliterate rule="^خرائط > اطلس"/>
-  <transliterate rule="^موسوعة > دائرة معارف"/>
-  <transliterate rule="^اطروحة > رسالة جامعية"/>
-  <transliterate rule="^ثيسس > رسالة جامعية"/>
-  <transliterate rule="^كاسيت > تسجيل صوتي"/>
-  <transliterate rule="^فيديو > تسجيل مرئي"/>
-  <transliterate rule="^بي دي اف > ملف الكتروني"/>
-  <transliterate rule="^اي بوك > كتاب الكتروني"/>
-  <transliterate rule="^ببليوغرافيا > قائمة مراجع"/>
+  <transliterate rule="^'سي دي' &gt; 'قرص';"/>
+  <transliterate rule="^'دي في دي' &gt; 'قرص';"/>
+  <transliterate rule="^'قرص مدمج' &gt; 'قرص';"/>
+  <transliterate rule="^'جورنال' &gt; 'دورية';"/>
+  <transliterate rule="^'مجلة' &gt; 'دورية';"/>
+  <transliterate rule="^'قاموس' &gt; 'معجم';"/>
+  <transliterate rule="^'خريطة' &gt; 'اطلس';"/>
+  <transliterate rule="^'خرائط' &gt; 'اطلس';"/>
+  <transliterate rule="^'موسوعة' &gt; 'دائرة معارف';"/>
+  <transliterate rule="^'اطروحة' &gt; 'رسالة جامعية';"/>
+  <transliterate rule="^'ثيسس' &gt; 'رسالة جامعية';"/>
+  <transliterate rule="^'كاسيت' &gt; 'تسجيل صوتي';"/>
+  <transliterate rule="^'فيديو' &gt; 'تسجيل مرئي';"/>
+  <transliterate rule="^'بي دي اف' &gt; 'ملف الكتروني';"/>
+  <transliterate rule="^'اي بوك' &gt; 'كتاب الكتروني';"/>
+  <transliterate rule="^'ببليوغرافيا' &gt; 'قائمة مراجع';"/>
 
   <!-- مصطلحات عامة -->
-  <transliterate rule="^عربة > سيارة"/>
-  <transliterate rule="^مركبة > سيارة"/>
-  <transliterate rule="^اوتومبيل > سيارة"/>
-  <transliterate rule="^اوتوبيس > حافلة"/>
-  <transliterate rule="^باص > حافلة"/>
-  <transliterate rule="^تاكسي > اجرة"/>
-  <transliterate rule="^سيكل > دراجة"/>
-  <transliterate rule="^بسكليت > دراجة"/>
-  <transliterate rule="^موتوسيكل > دراجة نارية"/>
-  <transliterate rule="^تلميذ > طالب"/>
-  <transliterate rule="^تلفزيون > تلفاز"/>
-  <transliterate rule="^راديو > مذياع"/>
+  <transliterate rule="^'عربة' &gt; 'سيارة';"/>
+  <transliterate rule="^'مركبة' &gt; 'سيارة';"/>
+  <transliterate rule="^'اوتومبيل' &gt; 'سيارة';"/>
+  <transliterate rule="^'اوتوبيس' &gt; 'حافلة';"/>
+  <transliterate rule="^'باص' &gt; 'حافلة';"/>
+  <transliterate rule="^'تاكسي' &gt; 'اجرة';"/>
+  <transliterate rule="^'سيكل' &gt; 'دراجة';"/>
+  <transliterate rule="^'بسكليت' &gt; 'دراجة';"/>
+  <transliterate rule="^'موتوسيكل' &gt; 'دراجة نارية';"/>
+  <transliterate rule="^'تلميذ' &gt; 'طالب';"/>
+  <transliterate rule="^'تلفزيون' &gt; 'تلفاز';"/>
+  <transliterate rule="^'راديو' &gt; 'مذياع';"/>
 
   <!-- دول وأماكن (توحيد الأسماء الشائعة) -->
-  <transliterate rule="^انجلترا > المملكة المتحدة"/>
-  <transliterate rule="^بريطانيا > المملكة المتحدة"/>
-  <transliterate rule="^امريكا > الولايات المتحدة"/>
-  <transliterate rule="^بي بي سي > هيئة الاذاعة البريطانية"/>
+  <transliterate rule="^'انجلترا' &gt; 'المملكة المتحدة';"/>
+  <transliterate rule="^'بريطانيا' &gt; 'المملكة المتحدة';"/>
+  <transliterate rule="^'امريكا' &gt; 'الولايات المتحدة';"/>
+  <transliterate rule="^'بي بي سي' &gt; 'هيئة الاذاعة البريطانية';"/>
 
   <!-- 8. استعادة الكلمات المحمية (إزالة رمز الحماية _) -->
-  <transliterate rule="^_ > "/>
+  <!-- استبدلت إلى تعليمة تستخدم كتحويل لإزالة underscore بداية السلسلة إلى مسافة -->
+  <transliterate rule="^'_' &gt; '&#32;';"/>
 
   <display/>
   <casemap rule="l"/>
