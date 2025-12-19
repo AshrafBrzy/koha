@@ -66,7 +66,7 @@ Installation Steps
 
 1. Download the script:
 
-wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
+wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_phased.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_phased.sh)
 
 
 2. Run installer:
@@ -158,7 +158,7 @@ License: Creative Commons (CC BY-SA 4.0)
 
 1. تحميل السكريبت:
 
-wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_27.sh)
+wget --no-check-certificate [https://raw.githubusercontent.com/AshrafBrzy/koha/koha_installer_phased.sh](https://raw.githubusercontent.com/AshrafBrzy/koha/main/koha_installer_phased.sh)
 
 
 2. تشغيل المثبت مباشرة:
