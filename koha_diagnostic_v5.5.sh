@@ -14,8 +14,8 @@ KOHA_INTRA_LOGS="/var/log/koha/*/plack.log"
 ERR_LOG="/var/log/apache2/error.log"
 
 # --- Telegram API Configuration ---
-TG_TOKEN="8280682002:AAFlcye6SRyes3qzj9x8jtNLAq3FXnVv588"
-TG_CHAT_IDS=("564805760" "-5244030104")
+TG_TOKEN=""
+TG_CHAT_IDS=()
 TELEGRAM_ALERT=""
 TELEGRAM_REPORT=""
 TELEGRAM_SERVICES=""
